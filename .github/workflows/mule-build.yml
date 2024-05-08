@@ -60,12 +60,12 @@ jobs:
       env:
         USERNAME: ${{ secrets.USERNAME}}
         PASSWORD: ${{ secrets.PASSWORD }}
-        CLOUDHUB_APP_NAME: ProcessSalesforceAccount
-        REGION: us-east-1
-        RUNTIME: 4.5
-        ENVIRONMENT: Sandbox
-        WORKERS: 1
-        WORKER_TYPE: Micro
+        CLOUDHUB_APP_NAME: ${CLOUDHUB_APP_NAME}
+        REGION: ${REGION}
+        RUNTIME: ${RUNTIME}
+        ENVIRONMENT: ${ENVIRONMENT}
+        WORKERS: ${WORKERS}
+        WORKER_TYPE: ${WORKER_TYPE}
         CLIENT_ID: ${{ secrets.CLIENT_ID }}
         CLIENTSECRET:  ${{ secrets.CLIENTSECRET }}
       run: |
