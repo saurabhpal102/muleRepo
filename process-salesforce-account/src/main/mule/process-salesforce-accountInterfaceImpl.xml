@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="9272ba1f-536f-48e2-ae0e-67e8e8762fcb" file="configuration/dev-config.yaml" key="mulesoft" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<sftp:config name="SFTP_Config" doc:name="SFTP Config" doc:id="08c78a95-0c46-41fe-a64c-eedd12094e63" >
+		<sftp:connection workingDir="${secure::sftp.workingDirectory}" host="${secure::sftp.host}" port="${secure::sftp.port}" username="${secure::sftp.username}" password="${secure::sftp.password}" />
+	</sftp:config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="58173e4c-5380-42e7-84a0-d65f7a2aabb3" >
+		<http:request-connection host="localhost" port="8081" />
+	</http:request-config>
+	<configuration doc:name="Configuration" doc:id="8ce7eaa3-86a2-4cfe-9829-c89bb6e8b7c5" defaultErrorHandler-ref="allErrorHandler" />
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="db9e476a-866e-44e1-85e8-6b6afbd10cbb" >
+		<salesforce:basic-connection username="${secure::salesforce.username}" password="${secure::salesforce.password}" securityToken="${secure::salesforce.securityToken}" />
+	</salesforce:sfdc-config>
+	<sub-flow name="process_getFileFromSFTP" doc:id="d6eeabf5-d396-41f2-9e52-d02d82ab8346" >
+		<set-variable value="#[(attributes.queryParams.fileName default &quot;&quot;) ++ '.csv']" doc:name="Set FileName" doc:id="24423337-6f5d-4631-94c6-81e6c9b34f11" variableName="fileName"/>
+		<sftp:read doc:name="Read File From SFTP" doc:id="6f5cc4b8-06ed-421f-b9af-acf13a5d7ceb" config-ref="SFTP_Config" path="#[vars.fileName]">
+			<error-mapping sourceType="SFTP:ACCESS_DENIED" targetType="ERROR:ACCESS_DENIED" />
+			<error-mapping sourceType="SFTP:CONNECTIVITY" targetType="ERROR:CONNECTIVITY" />
+			<error-mapping sourceType="SFTP:FILE_LOCK" targetType="ERROR:FILE_LOCK" />
+			<error-mapping sourceType="SFTP:ILLEGAL_PATH" targetType="ERROR:ILLEGAL_PATH" />
+		</sftp:read>
+		<logger level="INFO" doc:name="Logger" doc:id="fd6f753a-774f-4f7d-ac16-e1943fd2a8e5" message="#[payload]"/>
+		<ee:transform doc:name="payload to json" doc:id="46dea9e8-be8a-4861-b110-178d0771efd3">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+Name: (payload01.first_name default "") ++ " " ++ (payload01.last_name default ""),
+	ID__c: payload01.id,
+	Username__c: payload01.username,
+	DOB__c: payload01.DOB,
+	Designation__c:payload01.designation,
+	ActiveStatus__c: payload01.is_active,
+	CreatedAt__c: payload01.Created_at,
+	Country__c: payload01.country_code
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="67ea4138-1fb0-4898-ad25-67a43b13fb4c">
+			<set-variable value="#[payload.Designation__c]" doc:name="Set Designation" doc:id="c570e36d-ec3e-44e1-a259-b2709f8aeddb" variableName="designation"/>
+			<set-variable value="#[payload]" doc:name="Set AccountData" doc:id="43e75842-d4f0-4529-830c-bd1024da0fa4" variableName="accountData"/>
+			<!-- [STUDIO:"Cache"]<ee:cache doc:name="Cache" doc:id="5099b6bd-e832-4f25-9d3b-ed43412f2eb8" /> [STUDIO] -->
+			<salesforce:read-metadata doc:name="Read metadata" doc:id="21989264-885d-40d5-9cb9-436e7001a1a9" config-ref="Salesforce_Config" type="CustomMetadata" target="processedData">
+				<salesforce:full-names ><![CDATA[#[output application/java
+
+---
+
+["CustomDesignation__mdt." ++ vars.designation]]]]></salesforce:full-names>
+			</salesforce:read-metadata>
+			<logger level="INFO" doc:name="Logger" doc:id="a55d4806-5878-446d-b3c1-bcfeaf39922c" message="#[vars.processedData]" />
+			<ee:transform doc:name="payload to json" doc:id="6dee8309-8a73-4f29-8bb9-17ff99c045f6" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+
+import modules::Custom_Function
+output application/java
+
+---
+{
+	Name: vars.accountData.Name,
+	ID__c: vars.accountData.ID__c as Number,
+	Username__c: vars.accountData.Username__c,
+	DOB__c: Custom_Function::formatAsDate(vars.accountData.DOB__c),
+	CreatedAt__c: Custom_Function::formatAsDateTime(vars.accountData.CreatedAt__c),
+	Designation__c:vars.processedData[0][7],
+	ActiveStatus__c :Custom_Function::formatAsBool(vars.accountData.ActiveStatus__c),
+	Country__c: Custom_Function::getCountry(vars.accountData.Country__c)
+}
+]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="815a5ec9-71a1-4e48-a691-8d68bff8311f" message="#[payload]"/>
+			<salesforce:upsert objectType="Account" externalIdFieldName="ID__c" doc:name="Upsert" doc:id="fa369be2-89b9-49de-90b7-151d46d1b58f" config-ref="Salesforce_Config">
+				<error-mapping sourceType="SALESFORCE:COMMUNICATION" targetType="ERROR:COMMUNICATION" />
+				<error-mapping sourceType="SALESFORCE:CONNECTIVITY" targetType="ERROR:CONNECTIVITY" />
+				<error-mapping sourceType="SALESFORCE:INSUFFICIENT_PERMISSIONS" targetType="ERROR :INSUFFICIENT_PERMISSION" />
+				<error-mapping sourceType="SALESFORCE:INVALID_INPUT" targetType="ERROR:INVALID_INPUT" />
+				<error-mapping sourceType="SALESFORCE:INVALID_RESPONSE" targetType="ERROR:INVALID_RESPONSE" />
+				<error-mapping sourceType="SALESFORCE:LIMIT_EXCEEDED" targetType="ERROR:LIMIT_EXCEEDED" />
+				<error-mapping sourceType="SALESFORCE:MUTUAL_AUTHENTICATION_FAILED" targetType="ERROR:MUTUAL_AUTHENTICATION" />
+				<error-mapping sourceType="SALESFORCE:NOT_FOUND" targetType="ERROR:NOT_FOUND" />
+				<error-mapping sourceType="SALESFORCE:OPERATION_NOT_SUPPORTED" targetType="ERROR:OPERATION_NOT_SUPPORTED" />
+				<error-mapping sourceType="SALESFORCE:RETRY_EXHAUSTED" targetType="ERROR:RETRY_EXHAUSTED" />
+				<error-mapping sourceType="SALESFORCE:TIMEOUT" targetType="ERROR:TIMEOUT" />
+				<error-mapping sourceType="SALESFORCE:UNAVAILABLE" targetType="ERROR:UNAVAILABLE" />
+				<error-mapping targetType="ERROR:ANY" />
+				<salesforce:records><![CDATA[#[[payload]]]]></salesforce:records>
+			</salesforce:upsert>
+			<ee:transform doc:name="Transform Message" doc:id="b5824f30-4a62-489a-bbce-fdbb4fc72aea" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="c9601081-88e2-47c5-ba68-b83ca91ccb8f" message="#[payload]"/>
+		</foreach>
+	</sub-flow>
+</mule>

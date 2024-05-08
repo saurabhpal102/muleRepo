@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="allErrorHandler" doc:id="d126dee6-ed79-4cc0-a4dc-b9fc740494e5" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="be80a43d-8c35-4e8c-8536-c92b4ad440d5" type="APIKIT:BAD_REQUEST">
+			<ee:transform doc:name="Transform Message" doc:id="886bdd91-af98-4d8b-8651-c673e2b8165c" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Bad request"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="bd9fc0c2-1969-4e74-a351-b8a10681f795" type="APIKIT:NOT_FOUND">
+			<ee:transform doc:name="Transform Message" doc:id="e8db1e25-8c1f-4d8a-b5d9-36b77edbf57a" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Resource not found"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="24d9c9c8-d836-415e-8731-6bf4010d70cb" type="APIKIT:METHOD_NOT_ALLOWED">
+			<ee:transform doc:name="Transform Message" doc:id="fea89570-bb82-4761-9322-a73912a102b4" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Method not allowed"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c21fd85c-413d-407b-8f68-db581ac3ba3f" type="APIKIT:NOT_ACCEPTABLE">
+			<ee:transform doc:name="Transform Message" doc:id="3025aa73-3da7-4532-9389-a5e2eb474e70" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Not acceptable"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1378af16-d21c-49e9-97ce-5211cd430ab1" type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+			<ee:transform doc:name="Transform Message" doc:id="47860e5b-f19a-4046-8db1-dc3c62260e45" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Unsupported media type"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="101b8fa9-6dfb-46a7-b9a5-2b2fa7212c78" type="APIKIT:NOT_IMPLEMENTED">
+			<ee:transform doc:name="Transform Message" doc:id="a48d548e-f6da-424f-8c03-484e8860b3e2" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="0070fab0-72e9-44f3-8c2b-cd21cdc3c4cd" type="ERROR:ACCESS_DENIED">
+			<ee:transform doc:name="Transform Message" doc:id="0599c298-46d7-48a5-897f-e50a2cd81ff1" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="84e1d267-dc7c-49a3-a2c0-002aa7c8273c" type="ERROR:CONNECTIVITY">
+			<ee:transform doc:name="Transform Message" doc:id="45f995bc-0e15-4880-b5cd-6894d500756b" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e6c61bdb-a9b0-400a-bd0b-62e54486b123" type="ERROR:FILE_LOCK">
+			<ee:transform doc:name="Transform Message" doc:id="2cee0c74-71c6-4145-9f03-4a47a2b4a9f7" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ad38e833-80a4-49f1-ad98-f838d3db3557" type="ERROR:ILLEGAL_PATH">
+			<ee:transform doc:name="Transform Message" doc:id="8de84149-3d86-43c4-96d9-5729a5f28580" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="23400c33-5342-40ae-bb23-777e44c5165e" type="ERROR:COMMUNICATION, ERROR:CONNECTIVITY, ERROR :INSUFFICIENT_PERMISSION, ERROR:INVALID_INPUT, ERROR:INVALID_RESPONSE, ERROR:LIMIT_EXCEEDED, ERROR:MUTUAL_AUTHENTICATION, ERROR:NOT_FOUND, ERROR:OPERATION_NOT_SUPPORTED, ERROR:RETRY_EXHAUSTED, ERROR:TIMEOUT, ERROR:UNAVAILABLE">
+			<ee:transform doc:name="Transform Message" doc:id="6d96a6ed-77b9-4137-94f2-1400e0fc21dc" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"message":error.description
+}&#93;&#93;></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate> [STUDIO] -->
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="28aff1d3-4967-46d6-a77e-90ffc7904ab8" type="ERROR:BAD_REQUEST">
+			<ee:transform doc:name="Transform Message" doc:id="e77fac7a-83e5-4ab0-9508-401f12ed8c80" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"message":error.description
+}&#93;&#93;></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate> [STUDIO] -->
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="8929e769-5754-4faf-9a30-ac2c24c62dd0" type="ERROR:CLIENT_SECURITY">
+			<ee:transform doc:name="Transform Message" doc:id="8b376d7f-e152-4153-bdff-24d172158884" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"message":error.description
+}&#93;&#93;></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate> [STUDIO] -->
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="23887a31-b534-46d8-a983-e032102d0711" type="ERROR:CONNECTIVITY">
+			<ee:transform doc:name="Transform Message" doc:id="fbc6fc77-f645-4f89-a19a-3c67e998eeb0" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"message":error.description
+}&#93;&#93;></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate> [STUDIO] -->
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="35e6763e-41ae-4430-95de-6f5887ae8571" type="ERROR:FORBIDDEN">
+			<ee:transform doc:name="Transform Message" doc:id="6d7d5c32-3475-45d8-87fd-bdaf4c43acd0" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"message":error.description
+}&#93;&#93;></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate> [STUDIO] -->
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e8519c11-dfaa-4936-9d25-a55deadb9d5a" type="ERROR:INTERNAL_SERVER_ERROR">
+			<ee:transform doc:name="Transform Message" doc:id="6c66d807-b52c-4000-9b21-4a00bb7bfc3d" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"message":error.description
+}&#93;&#93;></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate> [STUDIO] -->
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="41f37a8e-b52c-4af4-a1fa-d963a2cb9258" type="ERROR:METHOD_NOT_ALLOWED">
+			<ee:transform doc:name="Transform Message" doc:id="2179899e-99b1-44cf-8032-4098ee7ccd74" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"message":error.description
+}&#93;&#93;></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate> [STUDIO] -->
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2f387204-b3a7-4b05-aca2-a781c1ccb0c3" type="ERROR:NOT_ACCEPTABLE">
+			<ee:transform doc:name="Transform Message" doc:id="1fa935b7-e9f3-45bc-af38-dfc9b5a86901" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"message":error.description
+}&#93;&#93;></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate> [STUDIO] -->
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2bb34831-56a6-4a6c-9ef9-d2fd23515f36" type="ERROR:NOT_FOUND">
+			<ee:transform doc:name="Transform Message" doc:id="ccd9de4b-ea79-4e25-aadd-c7bc5f73e525" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"message":error.description
+}&#93;&#93;></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate> [STUDIO] -->
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="11dc477a-8c71-4bde-ac73-b75bc64c044c" type="ERROR:PARSING">
+			<ee:transform doc:name="Transform Message" doc:id="85a7a933-da74-461c-ba39-142ba6cb038c" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"message":error.description
+}&#93;&#93;></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate> [STUDIO] -->
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="7bbe5ae3-0fc0-4932-a3cf-07af9f705f78" type="ERROR:SECURITY">
+			<ee:transform doc:name="Transform Message" doc:id="5422ca06-8917-4f04-9603-95cb8a0379fb" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"message":error.description
+}&#93;&#93;></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate> [STUDIO] -->
+		<!-- [STUDIO:"On Error Propagate"]<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ad27764b-57af-46f6-a736-3277dfc7d9d8" type="ERROR:SERVICE_UNAVILABLE">
+			<ee:transform doc:name="Transform Message" doc:id="06bb815f-3ee2-45f8-836c-02ad045ab8f0" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+	"message":error.description
+}&#93;&#93;></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate> [STUDIO] -->
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="5c50c52a-9ca5-4891-9fd1-ff70b2f7b1d8" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="613afbca-bcdb-4295-8d0b-8b8a67a215f3" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+</mule>

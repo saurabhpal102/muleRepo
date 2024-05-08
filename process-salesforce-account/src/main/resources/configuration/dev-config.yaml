@@ -1,0 +1,11 @@
+sftp:
+  host: "![KyGMvMlyELYvwWhz4YXKWQ==]"
+  port: "![NVrhUVLACLI=]"
+  username: "![eyQ5vFsbIlI=]"
+  password: "![rlGgv5va+O8qqJ+SnMnVLg==]"
+  workingDirectory: "![0pg7m+8JVRxSAeMsjnBDMWikhLtQk10H]"
+
+salesforce:
+  username: "![1g3j8Xw+Wux+ukVB6KcWpcl9kNjscDq7Ru98zdbLCsM=]"
+  password: "![qCztiJbWgBUp+qy3ITj1eQ==]"
+  securityToken: "![dj6fPui+eohUNPD8AJJNRDCfZMhRcgZfFn1AlXdK+kY=]"
