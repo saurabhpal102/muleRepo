@@ -19,6 +19,7 @@
 		<mule.maven.plugin.version>4.1.0</mule.maven.plugin.version>
 	</properties>
 	<build>
+	
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -31,6 +32,7 @@
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
+				
 				<configuration>
 					<classifier>mule-application</classifier>
 					<cloudHubDeployment>
@@ -51,7 +53,9 @@
 						</properties>
 					</cloudHubDeployment>
 				</configuration>
+				
 			</plugin>
+			
 		</plugins>
 	</build>
 
