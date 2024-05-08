@@ -61,7 +61,7 @@ jobs:
         PASSWORD: ${{ secrets.PASSWORD }}
         CLOUDHUB_APP_NAME: ProcessSalesforceAccount
         REGION: us-east-1
-        RUNTIME: 4.5
+        RUNTIME: 4.6
         ENVIRONMENT: Sandbox
         WORKERS: 1
         WORKER_TYPE: Micro
