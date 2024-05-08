@@ -4,7 +4,7 @@ name: Build and Deploy to CloudHub
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ master ]
     
 jobs:
   build:
