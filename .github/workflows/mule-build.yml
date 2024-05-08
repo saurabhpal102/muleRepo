@@ -41,7 +41,8 @@ jobs:
         
   deploy:
     needs: build
-    runs-on: ubuntu-latest
+    environment: prod
+    runs-on: ubuntu-latest   
     steps:    
     - name: Checkout this repo
       uses: actions/checkout@v3
