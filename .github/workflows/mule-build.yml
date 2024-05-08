@@ -4,7 +4,7 @@ name: Build and Deploy to CloudHub
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main, master ]
     
 jobs:
   build:
@@ -41,7 +41,7 @@ jobs:
         
   deploy:
     needs: build
-    environment: prod
+    environment: dev
     runs-on: ubuntu-latest   
     steps:    
     - name: Checkout this repo
