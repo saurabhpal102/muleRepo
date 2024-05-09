@@ -41,7 +41,7 @@ jobs:
         
   deploy:
     needs: build
-    environment: prod
+    environment: PROD
     runs-on: ubuntu-latest   
     steps:    
     - name: Checkout this repo
@@ -60,14 +60,14 @@ jobs:
       env:
         USERNAME: ${{ secrets.USERNAME}}
         PASSWORD: ${{ secrets.PASSWORD }}
-        CLOUDHUB_APP_NAME: ${CLOUDHUB_APP_NAME}
-        REGION: ${REGION}
-        RUNTIME: ${RUNTIME}
-        ENVIRONMENT: ${ENVIRONMENT}
-        WORKERS: ${WORKERS}
-        WORKER_TYPE: ${WORKER_TYPE}
-        CLIENT_ID: ${{ secrets.CLIENT_ID }}
-        CLIENTSECRET:  ${{ secrets.CLIENTSECRET }}
+        CLOUDHUB_APP_NAME: ${{vars.CLOUDHUB_APP_NAME}}
+        REGION: ${{vars.REGION}}
+        RUNTIME: ${{vars.RUNTIME}}
+        ENVIRONMENT: ${{vars.ENVIRONMENT}}
+        WORKERS: ${{vars.WORKERS}}
+        WORKER_TYPE: ${{vars.WORKER_TYPE}}
+        CLIENT_ID: ${{vars.CLIENT_ID}}
+        CLIENTSECRET:  ${{vars.CLIENTSECRET}}
       run: |
         artifactName=$(ls *.jar | head -1)
         mvn deploy -B -X -DmuleDeploy \
