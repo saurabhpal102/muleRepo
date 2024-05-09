@@ -60,12 +60,12 @@ jobs:
       env:
         USERNAME: ${{ secrets.USERNAME}}
         PASSWORD: ${{ secrets.PASSWORD }}
-        CLOUDHUB_APP_NAME: ${env.CLOUDHUB_APP_NAME}
-        REGION: ${{env.REGION}}
-        RUNTIME: ${{env.RUNTIME}}
-        ENVIRONMENT: ${{env.ENVIRONMENT}}
-        WORKERS: ${{env.WORKERS}}
-        WORKER_TYPE: ${{env.WORKER_TYPE}}
+        CLOUDHUB_APP_NAME: ${environment.CLOUDHUB_APP_NAME}
+        REGION: ${{environment.REGION}}
+        RUNTIME: ${{environment.RUNTIME}}
+        ENVIRONMENT: ${{environment.ENVIRONMENT}}
+        WORKERS: ${{environment.WORKERS}}
+        WORKER_TYPE: ${{environment.WORKER_TYPE}}
         CLIENT_ID: ${{ secrets.CLIENT_ID }}
         CLIENTSECRET:  ${{ secrets.CLIENTSECRET }}
       run: |
