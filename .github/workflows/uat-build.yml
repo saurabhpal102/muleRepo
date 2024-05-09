@@ -4,7 +4,7 @@ name: Build and Deploy to CloudHub
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev,uat ]
     
 jobs:
   build:
@@ -41,9 +41,18 @@ jobs:
         
   deploy:
     needs: build
-    environment: PROD
     runs-on: ubuntu-latest   
     steps:    
+    - name:  Determine pushed branch
+      uses: haya14busa/action-cond@v1
+      id: environment
+      with:
+          cond: ${{ github.ref == 'refs/heads/origin/dev' }}
+          if_true: DEV
+          if_false: UAT 
+     
+    - name: Use the environment variable
+      run: echo "Deploying to $ENVIRONMENT"
     - name: Checkout this repo
       uses: actions/checkout@v3
     - name: Cache dependencies
@@ -56,7 +65,7 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: artifacts
-    - name: Deploy to CloudHub      
+    - name: Deploy to CloudHub
       env:
         USERNAME: ${{ secrets.USERNAME}}
         PASSWORD: ${{ secrets.PASSWORD }}
