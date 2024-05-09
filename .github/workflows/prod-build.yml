@@ -41,7 +41,7 @@ jobs:
         
   deploy:
     needs: build
-    environment: prod
+    environment: PROD
     runs-on: ubuntu-latest   
     steps:    
     - name: Checkout this repo
@@ -56,19 +56,18 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: artifacts
-    - name: Deploy to CloudHub
+    - name: Deploy to CloudHub      
       env:
-        WORKFLOW_VARIABLE: prod
         USERNAME: ${{ secrets.USERNAME}}
         PASSWORD: ${{ secrets.PASSWORD }}
-        CLOUDHUB_APP_NAME: ${WORKFLOW_VARIABLE.CLOUDHUB_APP_NAME}
-        REGION: ${WORKFLOW_VARIABLE.REGION}
-        RUNTIME: ${WORKFLOW_VARIABLE.RUNTIME}
-        ENVIRONMENT: ${WORKFLOW_VARIABLE.ENVIRONMENT}
-        WORKERS: ${WORKFLOW_VARIABLE.WORKERS}
-        WORKER_TYPE: ${WORKFLOW_VARIABLE.WORKER_TYPE}
-        CLIENT_ID: ${{ secrets.CLIENT_ID }}
-        CLIENTSECRET:  ${{ secrets.CLIENTSECRET }}
+        CLOUDHUB_APP_NAME: ${{vars.CLOUDHUB_APP_NAME}}
+        REGION: ${{vars.REGION}}
+        RUNTIME: ${{vars.RUNTIME}}
+        ENVIRONMENT: ${{vars.ENVIRONMENT}}
+        WORKERS: ${{vars.WORKERS}}
+        WORKER_TYPE: ${{vars.WORKER_TYPE}}
+        CLIENT_ID: ${{vars.CLIENT_ID}}
+        CLIENTSECRET:  ${{vars.CLIENTSECRET}}
       run: |
         artifactName=$(ls *.jar | head -1)
         mvn deploy -B -X -DmuleDeploy \
