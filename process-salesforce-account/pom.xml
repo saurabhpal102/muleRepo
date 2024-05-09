@@ -28,8 +28,7 @@
 				<groupId>org.mule.tools.maven</groupId>
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
-				<extensions>true</extensions>
-				
+				<extensions>true</extensions>			
 				<configuration>
 					<classifier>mule-application</classifier>
 					<cloudHubDeployment>
@@ -49,8 +48,7 @@
 							<anypoint.platform.client_secret>${anypoint_platform_client_secret}</anypoint.platform.client_secret>
 						</properties>
 					</cloudHubDeployment>
-				</configuration>
-				
+				</configuration>			
 			</plugin>
 		</plugins>
 	</build>
