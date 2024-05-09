@@ -75,6 +75,7 @@
 		
 		<dependency>
 			<groupId>org.mule.modules</groupId>
+			
 			<artifactId>mule-apikit-module</artifactId>
 			<version>1.10.4</version>
 			<classifier>mule-plugin</classifier>
