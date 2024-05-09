@@ -66,8 +66,8 @@ jobs:
               echo "Environment: DEV"
               echo "::set-env name=ENVIRONMENT::DEV"
             else
-              echo "Environment: Unknown"
-              echo "::set-env name=ENVIRONMENT::Unknown"
+              echo "Environment: PROD"
+              echo "::set-env name=ENVIRONMENT::PROD"
             fi
         
        - name: Use the environment variable
