@@ -77,7 +77,7 @@ jobs:
         -Dmule.artifact=$artifactName \
         -Danypoint_platform_username="$USERNAME" \
         -Danypoint_platform_password="$PASSWORD" \
-        -Denvironment="${{steps.environment.outputs.value}" \
+        -Denvironment="${{ steps.environment.outputs.value }}" \
         -Danypoint_platform_client_id="${CLIENT_ID}" \
         -Danypoint_platform_client_secret="${CLIENTSECRET}" \
         -Dcloudhub.application.runtime="${RUNTIME}" \
