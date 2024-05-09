@@ -52,7 +52,7 @@ jobs:
           if_false: UAT 
      
     - name: Use the environment variable
-      run: echo "Deploying to $ENVIRONMENT"
+      run: echo "Deploying to $environment"
     - name: Checkout this repo
       uses: actions/checkout@v3
     - name: Cache dependencies
