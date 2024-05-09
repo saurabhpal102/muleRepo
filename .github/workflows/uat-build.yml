@@ -43,7 +43,7 @@ jobs:
   deploy-UAT:
     
     needs: [build-UAT]
-    environment: DEV
+    environment: UAT
     runs-on: ubuntu-latest   
     steps:    
     - name: Checkout this repo
@@ -199,7 +199,7 @@ jobs:
         
   deploy-PROD:
     needs: [build-DEV]
-    environment: DEV
+    environment: PROD
     runs-on: ubuntu-latest   
     steps:    
     - name: Checkout this repo
