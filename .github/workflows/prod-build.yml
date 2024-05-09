@@ -58,14 +58,15 @@ jobs:
         name: artifacts
     - name: Deploy to CloudHub
       env:
+        WORKFLOW_VARIABLE: prod
         USERNAME: ${{ secrets.USERNAME}}
         PASSWORD: ${{ secrets.PASSWORD }}
-        CLOUDHUB_APP_NAME: ${environment.CLOUDHUB_APP_NAME}
-        REGION: ${{environment.REGION}}
-        RUNTIME: ${{environment.RUNTIME}}
-        ENVIRONMENT: ${{environment.ENVIRONMENT}}
-        WORKERS: ${{environment.WORKERS}}
-        WORKER_TYPE: ${{environment.WORKER_TYPE}}
+        CLOUDHUB_APP_NAME: ${WORKFLOW_VARIABLE.CLOUDHUB_APP_NAME}
+        REGION: ${WORKFLOW_VARIABLE.REGION}
+        RUNTIME: ${WORKFLOW_VARIABLE.RUNTIME}
+        ENVIRONMENT: ${WORKFLOW_VARIABLE.ENVIRONMENT}
+        WORKERS: ${WORKFLOW_VARIABLE.WORKERS}
+        WORKER_TYPE: ${WORKFLOW_VARIABLE.WORKER_TYPE}
         CLIENT_ID: ${{ secrets.CLIENT_ID }}
         CLIENTSECRET:  ${{ secrets.CLIENTSECRET }}
       run: |
