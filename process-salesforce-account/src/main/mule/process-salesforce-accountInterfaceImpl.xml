@@ -30,6 +30,7 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 			<error-mapping sourceType="SFTP:ILLEGAL_PATH" targetType="ERROR:ILLEGAL_PATH" />
 		</sftp:read>
 		<logger level="INFO" doc:name="Logger" doc:id="fd6f753a-774f-4f7d-ac16-e1943fd2a8e5" message="#[payload]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="3a086ede-4b18-4d8f-9ef1-4fe1fec4274a" message="#[payload]"/>
 		<ee:transform doc:name="payload to json" doc:id="46dea9e8-be8a-4861-b110-178d0771efd3">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
