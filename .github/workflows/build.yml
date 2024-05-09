@@ -47,7 +47,7 @@ jobs:
       uses: haya14busa/action-cond@v1
       id: environment
       with:
-          cond: ${{ github.ref == 'refs/heads/origin/dev' }}
+          cond: ${{ github.ref == 'refs/heads/dev' }}
           if_true: DEV
           if_false: UAT 
      
