@@ -4,11 +4,10 @@ name: Build and Deploy to CloudHub
 
 on:
   push:
-    branches: [ main,master,uat ]
+    branches: [ dev,uat ]
     
 jobs:
   build:
-    
     runs-on: ubuntu-latest
     steps:
     - name: Checkout this repo
@@ -40,85 +39,56 @@ jobs:
           name: artifacts
           path: process-salesforce-account/target/*.jar
         
-  # deploy:    
-  #   needs: [build]
-  #   runs-on: ubuntu-latest   
-  #   steps:  
-  #   - name: Determine pushed branch
-  #     # uses: haya14busa/action-cond@v1
-  #     id: environment
-  #     run: echo "Branch: ${{ github.ref }}"
-
-  deploy:    
-      needs: [build]
-      runs-on: ubuntu-latest   
-      steps:  
-       - name: Determine pushed branch
-         id: environment
-         # run: echo "Branch: ${{ github.ref }}"
-    
-       - name: Set environment based on branch
-         run: |
-            if [[ "${{ github.ref }}" == "refs/heads/origin/uat" ]]; then
-              echo "Environment: UAT"
-              echo "::set-env name=ENVIRONMENT::UAT"
-            elif [[ "${{ github.ref }}" == "refs/heads/origin/master" ]]; then
-              echo "Environment: DEV"
-              echo "::set-env name=ENVIRONMENT::DEV"
-            else
-              echo "Environment: PROD"
-              echo "::set-env name=ENVIRONMENT::PROD"
-            fi
-        
-       - name: Use the environment variable
-         run: echo "Deploying to $ENVIRONMENT"
-    
-        
-        # with:
-        #   cond: ${{ github.ref == 'refs/heads/origin/uat' }}
-        #   if_true: UAT
-        #   if_false: DEV 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest   
+    steps:    
+    - name:  Determine pushed branch
+      uses: haya14busa/action-cond@v1
+      id: environment
+      with:
+          cond: ${{ github.ref == 'refs/heads/origin/dev' }}
+          if_true: DEV
+          if_false: UAT 
      
-    
-      
-       - name: Use the environment variable
-         run: echo "Deploying to $ENVIRONMENT"
-       - name: Checkout this repo
-         uses: actions/checkout@v3
-       - name: Cache dependencies
-         uses: actions/cache@v3
-         with:
-           path: ~/.m2/repository
-           key: ${{ runner.os }}-maven-${{ hashFiles('**//pom.xml') }}
-           restore-keys: |
-             ${{ runner.os }}-maven-
-       - uses: actions/download-artifact@v3
-         with:
-           name: artifacts
-       - name: Deploy to CloudHub
-         env:
-            USERNAME: ${{ secrets.USERNAME}}
-            PASSWORD: ${{ secrets.PASSWORD }}
-            CLOUDHUB_APP_NAME: ${{vars.CLOUDHUB_APP_NAME}}
-            REGION: ${{vars.REGION}}
-            RUNTIME: ${{vars.RUNTIME}}
-            ENVIRONMENT: ${{vars.ENVIRONMENT}}
-            WORKERS: ${{vars.WORKERS}}
-            WORKER_TYPE: ${{vars.WORKER_TYPE}}
-            CLIENT_ID: ${{vars.CLIENT_ID}}
-            CLIENTSECRET:  ${{vars.CLIENTSECRET}}
-         run: |
-            artifactName=$(ls *.jar | head -1)
-            mvn deploy -B -X -DmuleDeploy \
-            -Dmule.artifact=$artifactName \
-            -Danypoint_platform_username="$USERNAME" \
-            -Danypoint_platform_password="$PASSWORD" \
-            -Denvironment="${ENVIRONMENT}" \
-            -Danypoint_platform_client_id="${CLIENT_ID}" \
-            -Danypoint_platform_client_secret="${CLIENTSECRET}" \
-            -Dcloudhub.application.runtime="${RUNTIME}" \
-            -Dcloudhub.application.name="${CLOUDHUB_APP_NAME}" \
-            -Dregion="${REGION}" \
-            -Dworkers="${WORKERS}" \
-            -DworkerType="${WORKER_TYPE}" \
-            --file process-salesforce-account/pom.xml
+    - name: Use the environment variable
+      run: echo "Deploying to $ENVIRONMENT"
+    - name: Checkout this repo
+      uses: actions/checkout@v3
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**//pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+    - uses: actions/download-artifact@v3
+      with:
+        name: artifacts
+    - name: Deploy to CloudHub
+      env:
+        USERNAME: ${{ secrets.USERNAME}}
+        PASSWORD: ${{ secrets.PASSWORD }}
+        CLOUDHUB_APP_NAME: ${{vars.CLOUDHUB_APP_NAME}}
+        REGION: ${{vars.REGION}}
+        RUNTIME: ${{vars.RUNTIME}}
+        ENVIRONMENT: ${{vars.ENVIRONMENT}}
+        WORKERS: ${{vars.WORKERS}}
+        WORKER_TYPE: ${{vars.WORKER_TYPE}}
+        CLIENT_ID: ${{vars.CLIENT_ID}}
+        CLIENTSECRET:  ${{vars.CLIENTSECRET}}
+      run: |
+        artifactName=$(ls *.jar | head -1)
+        mvn deploy -B -X -DmuleDeploy \
+        -Dmule.artifact=$artifactName \
+        -Danypoint_platform_username="$USERNAME" \
+        -Danypoint_platform_password="$PASSWORD" \
+        -Denvironment="${ENVIRONMENT}" \
+        -Danypoint_platform_client_id="${CLIENT_ID}" \
+        -Danypoint_platform_client_secret="${CLIENTSECRET}" \
+        -Dcloudhub.application.runtime="${RUNTIME}" \
+        -Dcloudhub.application.name="${CLOUDHUB_APP_NAME}" \
+        -Dregion="${REGION}" \
+        -Dworkers="${WORKERS}" \
+        -DworkerType="${WORKER_TYPE}" \
+        --file process-salesforce-account/pom.xml
