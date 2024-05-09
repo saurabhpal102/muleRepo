@@ -96,7 +96,6 @@
 		</dependency>
 		
 	</dependencies>
-
 	<repositories>
 		<repository>
 			<id>anypoint-exchange-v3</id>
