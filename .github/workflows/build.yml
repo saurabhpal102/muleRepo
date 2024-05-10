@@ -42,8 +42,10 @@ jobs:
     steps:    
     - name:  Determine pushed branch
       uses: haya14busa/action-cond@v1
-      id: environment
-      with:
+      # id: environment
+      # with:
+    - name: Set environment based on branch
+      run: |
           cond: ${{ github.ref == 'refs/heads/dev' }}then;
             if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
           echo "Environment: DEV"
