@@ -44,9 +44,23 @@ jobs:
       uses: haya14busa/action-cond@v1
       id: environment
       with:
-          cond: ${{ github.ref == 'refs/heads/dev' }}
-          if_true: DEV
-          if_false: UAT 
+          cond: ${{ github.ref == 'refs/heads/dev' }}then;
+            if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+          echo "Environment: DEV"
+            echo "ENVIRONMENT=DEV" >> $GITHUB_ENV
+            elif [[ "${{ github.ref }}" == "refs/heads/uat" ]]; then
+          echo "Environment1: UAT"
+            echo "ENVIRONMENT=UAT" >> $GITHUB_ENV
+            elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          echo "Environment2: PROD"
+            echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
+            else
+          echo "Environment3: Unknown"
+            echo "ENVIRONMENT=Unknown" >> $GITHUB_ENV
+            fi
+          
+          # if_true: DEV
+          # if_false: UAT 
     - name: Checkout this repo
       uses: actions/checkout@v3
     - name: Cache dependencies
@@ -77,7 +91,8 @@ jobs:
         -Dmule.artifact=$artifactName \
         -Danypoint_platform_username="$USERNAME" \
         -Danypoint_platform_password="$PASSWORD" \
-        -Denvironment="${{ steps.environment.outputs.value }}" \
+        # -Denvironment="${{ steps.environment.outputs.value }}" \
+        -Denvironment="$GITHUB_ENV" \
         -Danypoint_platform_client_id="${CLIENT_ID}" \
         -Danypoint_platform_client_secret="${CLIENTSECRET}" \
         -Dcloudhub.application.runtime="${RUNTIME}" \
