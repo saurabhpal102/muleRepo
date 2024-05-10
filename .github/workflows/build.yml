@@ -46,6 +46,7 @@ jobs:
       # with:
     - name: Set environment based on branch
       run: |
+          cd process-salesforce-account
           cond: ${{ github.ref == 'refs/heads/dev' }}then;
             if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
           echo "Environment: DEV"
